@@ -39,6 +39,9 @@ from sphinx.util.osutil import ensuredir
 from docutils import nodes
 from docutils.parsers.rst import directives
 
+from sphinx.builders.latex import LaTeXBuilder
+from pathlib import Path
+
 import requests
 
 
@@ -65,7 +68,14 @@ class Backend(object):
     def __init__(self, app):
         self._app = app
 
-    def visit_image_node_fallback(self, writer, node):
+    def visit_image_node_fallback(self, writer, node): 
+        
+        extention = Path(node["uri"]).suffix
+        is_unsuported_extention = extention in [".gif"]
+        if isinstance(writer.builder, LaTeXBuilder) and is_unsuported_extention:
+            logger.warning(f"Unsuported image format: {extention}", location=node)
+            raise nodes.SkipNode
+
         writer.visit_image(node)
 
     def depart_image_node_fallback(self, writer, node):
