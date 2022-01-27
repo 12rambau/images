@@ -347,7 +347,7 @@ def configure_backend(app):
     app.add_node(image_node,
                  **{output_type: backend_methods(image_node, output_type)
                     for output_type in ('html', 'latex', 'man', 'texinfo',
-                                        'text', 'epub')})
+                                        'text')})
 
     app.add_directive('thumbnail', ImageDirective)
     if config['override_image_directive']:
